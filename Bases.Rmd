@@ -1,0 +1,65 @@
+---
+title: "Operations basiques"
+author: "Valentin Henriot"
+date: "12/17/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Gestion des titres et du texte
+
+# Coucou Mathilde
+
+## Coucou Mathilde
+
+### Coucou Mathilde
+
+Coucou Mathilde 
+
+*Coucou Mathilde*
+
+**Coucou Mathilde**
+
+```{r addition}
+1+1
+```
+
+# Définir les variables de l'environnement 
+
+```{r}
+x <- 2
+y <- 5
+x*y
+```
+
+# Importer un jeu de données
+
+On appelle la librairie ReadR
+
+```{r}
+library(readr)
+```
+
+## Première méthode
+
+On écrit le chemin du fichier complètement.
+
+```{r message=FALSE}
+Titanic <- read_csv("~/Desktop/ProjectR/DataBase/testTitanic.csv")
+```
+
+## Deuxième méthode 
+
+On va appeler le document : Mettre le jeu de données dans le dossier où se trouve notre document puis définir le dossier sur Working Directory (More -> Set as working directory).
+
+```{r message=FALSE}
+AutreTitanic <- read_csv("testTitanic.csv")
+```
+
+## Troisième méthode 
+
+Cliquer sur le fichier, puis import dataset, puis recopier le chemin du fichier 
+
