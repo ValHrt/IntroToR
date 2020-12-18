@@ -22,7 +22,7 @@ library(readr)
 On écrit le chemin du fichier complètement.
 
 ```{r message=FALSE}
-#Titanic <- read_csv("~/Desktop/ProjectR/DataBase/testTitanic.csv")
+#Titanic <- read_csv("~/Desktop/ProjectR/DataBase/trainTitanic.csv")
 ```
 
 ## Deuxième méthode 
@@ -30,7 +30,7 @@ On écrit le chemin du fichier complètement.
 On va appeler le document : Mettre le jeu de données dans le dossier où se trouve notre document puis définir le dossier sur Working Directory (More -> Set as working directory).
 
 ```{r message=FALSE}
-Titanic <- read_csv("testTitanic.csv")
+Titanic <- read_csv("trainTitanic.csv")
 ```
 
 ## Troisième méthode 
@@ -94,12 +94,12 @@ Afficher une colonne en particulier du jeu de données, fonction View / head / t
 head(Titanic$Name, n = 10L)
 ```
 
-Ici donc nous pouvons voir les 10 premières personnes du jeu de données. Pour appeler la colonne Name nous avons simplement entré le nom du jeu de données suivi de $ puis du nom de la variable. 
+Ici donc nous pouvons voir les 10 premières personnes du jeu de données. Pour appeler la colonne Name nous avons simplement entré le nom du jeu de données suivi de $ puis du nom de la variable.
 
 **Deuxième méthode :**
 
 ```{r}
-head(Titanic[,3], n = 10L)
+head(Titanic[,4], n = 10L)
 ```
 
 Ici nous indiquons le numéro de la colonne que nous recherchons, à savoir la colonne numéro 3 "Name".
