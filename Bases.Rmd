@@ -48,7 +48,7 @@ library(readr)
 On écrit le chemin du fichier complètement.
 
 ```{r message=FALSE}
-Titanic <- read_csv("~/Desktop/ProjectR/DataBase/testTitanic.csv")
+#Titanic <- read_csv("~/Desktop/ProjectR/DataBase/testTitanic.csv")
 ```
 
 ## Deuxième méthode 
@@ -56,10 +56,46 @@ Titanic <- read_csv("~/Desktop/ProjectR/DataBase/testTitanic.csv")
 On va appeler le document : Mettre le jeu de données dans le dossier où se trouve notre document puis définir le dossier sur Working Directory (More -> Set as working directory).
 
 ```{r message=FALSE}
-AutreTitanic <- read_csv("testTitanic.csv")
+Titanic <- read_csv("testTitanic.csv")
 ```
 
 ## Troisième méthode 
 
 Cliquer sur le fichier, puis import dataset, puis recopier le chemin du fichier 
+
+# Explorer le jeu de données
+
+Voir le jeu de données dans son intégralité dans un nouvel onglet, fonction View :
+
+```{r}
+View(Titanic)
+```
+
+Tips : Il est préférable d'entre ce code directement dans la console pour éviter de lire ce code à chaque fois que le document est knitté.
+
+Pour voir les 10 premières lignes du jeu de données, fontion head :
+
+```{r}
+head(Titanic, n = 10L)
+```
+
+Pour voir les 10 dernières lignes du jeu de données, fonction tail :
+
+```{r}
+tail(Titanic, n = 10L)
+```
+
+L'argument 'n = ' peut être modifié pour faire apparaitre plus ou moins de lignes. Ici, il est défini sur 10.
+
+Pour voir le jeu de données en intégralité dans le même onglet, on utilise la fonction print :
+
+```{r}
+print(Titanic)
+```
+
+Pour voir le type des variables, fonction str :
+
+```{r}
+str(Titanic)
+```
 
