@@ -9,35 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Gestion des titres et du texte
-
-# Coucou Mathilde
-
-## Coucou Mathilde
-
-### Coucou Mathilde
-
-Coucou Mathilde 
-
-*Coucou Mathilde*
-
-**Coucou Mathilde**
-
-```{r addition}
-1+1
-```
-
-# Définir les variables de l'environnement 
-
-```{r}
-x <- 2
-y <- 5
-x*y
-```
-
 # Importer un jeu de données
 
-On appelle la librairie ReadR
+On appelle la librairie ReadR qui permet de lire les fichiers au format csv.
 
 ```{r}
 library(readr)
@@ -65,7 +39,10 @@ Cliquer sur le fichier, puis import dataset, puis recopier le chemin du fichier
 
 # Explorer le jeu de données
 
-Voir le jeu de données dans son intégralité dans un nouvel onglet, fonction View :
+## Afficher les données
+
+  **Fonction View :**
+  Permet de voir le jeu de données dans son intégralité dans un nouvel onglet
 
 ```{r}
 View(Titanic)
@@ -73,29 +50,203 @@ View(Titanic)
 
 Tips : Il est préférable d'entre ce code directement dans la console pour éviter de lire ce code à chaque fois que le document est knitté.
 
-Pour voir les 10 premières lignes du jeu de données, fontion head :
+  **Fontion head :**
+  Pour voir les 10 premières lignes du jeu de données
 
 ```{r}
 head(Titanic, n = 10L)
 ```
 
-Pour voir les 10 dernières lignes du jeu de données, fonction tail :
+  **Fonction tail :**
+  Pour voir les 10 dernières lignes du jeu de données
 
 ```{r}
 tail(Titanic, n = 10L)
 ```
 
 L'argument 'n = ' peut être modifié pour faire apparaitre plus ou moins de lignes. Ici, il est défini sur 10.
+Par défaut, les fonctions head et tail affichent les 6 premières ou dernières valeurs si "n" n'est pas défini. 
 
-Pour voir le jeu de données en intégralité dans le même onglet, on utilise la fonction print :
+  **Fonction print :**
+  Pour voir le jeu de données en intégralité dans le même onglet
 
 ```{r}
 print(Titanic)
 ```
 
-Pour voir le type des variables, fonction str :
+  **Fonction str :**
+  Pour voir le type des variables
 
 ```{r}
 str(Titanic)
 ```
+
+Il existe également la fonction **summary** pour "explorer" le jeu de données :
+
+```{r}
+summary(Titanic)
+```
+
+Afficher une colonne en particulier du jeu de données, fonction View / head / tail / print : (ici nous utiliserons head)
+**Première méthode :**
+
+```{r}
+head(Titanic$Name, n = 10L)
+```
+
+Ici donc nous pouvons voir les 10 premières personnes du jeu de données. Pour appeler la colonne Name nous avons simplement entré le nom du jeu de données suivi de $ puis du nom de la variable. 
+
+**Deuxième méthode :**
+
+```{r}
+head(Titanic[,3], n = 10L)
+```
+
+Ici nous indiquons le numéro de la colonne que nous recherchons, à savoir la colonne numéro 3 "Name".
+
+**Pour afficher une ligne en particulier :**
+
+```{r}
+Titanic[1,]
+```
+
+Ici, pas de fonction nécessaire, uniquement le nom du jeu de données et le numéro de ligne voulue. Toutefois, quand il s'agit d'un grand jeu de données, cette fonction n'est pas vraiment utile à moins de connaitre le numéro en particulier de la ligne que l'on souhaite voir.
+
+**Pour afficher plusieurs lignes en particulier :**
+
+```{r}
+Titanic[5:15,]
+```
+
+Ici, nous affichons les lignes numéro 5 à 15 (soit 11 lignes).
+
+## Recherche dans le jeu de données
+
+  **Fonction filter :**
+  Pour appliquer un filtre et faire une recherche sur un élément spécifique.
+  
+```{r message=FALSE}
+library(tidyverse)
+Titanic %>% filter(Sex=="female")
+```
+
+Ici, nous appelons la librairie tidyverse pour pouvoir utiliser %>%. Cette fonction est un "pipe operator", c'est à dire un argument nous permettant de relier différentes fonctions entre elles. Nous reviendrons plus tard sur ce pipe operator.
+Nous appelons donc le jeu de données Titanic puis nous lui indiquons que nous recherchons uniquement les passagers féminins.
+Pour la variable indiquée "Sex", nous utilisons ensuite == et non = car la valeur female est une valeur texte et non numérique.
+
+  **Pour appliquer plusieurs filtres liés entre eux :**
+  
+```{r}
+Titanic %>% filter(Sex=="female" & Pclass==1)
+```
+
+Ici, nous avons recherché toutes les femmes qui étaient en première classe. Nous aurions pu rajouter d'autres arguments pour filtrer encore plus si nous le souhaitions. Pour que les filtres soient liés entre eux, il faut utiliser le signe &.
+
+  **Pour appliquer des filtres non-liés entre eux :**
+  
+```{r}
+Titanic %>% filter(Sex=="female" | Pclass==1)
+```
+
+Ici, nous avons souhaité afficher les femmes ou les personnes présentes en première classe, nous avons donc utiliser le symbole suivant pour indiquer le "ou" |.
+Dans ce cas de figure là, nous verrons donc toutes les lignes concernant les femmes ainsi que celles concernant les personnes en première classe (hommes et femmes confonfus).
+
+  **Fonction min :**
+  Pour trouver la valeur minimum dans une variable
+  
+```{r}
+min(Titanic$Age, na.rm = TRUE)
+```
+
+Ici, nous voyons que l'âge le plus bas dans le jeu de données est 0,17. L'argument na.rm = TRUE indique que nous ne prenons pas en compte les valeurs manquantes. Par défaut, na.rm = FALSE et prend donc en compte les valeurs manquantes NA.
+
+  **Fonction max :**
+  Pour trouver la valeur maximum dans une variable
+  
+```{r}
+max(Titanic$Age, na.rm = T)
+```
+
+Même manipulation que pour la fonction "min", ici na.rm = T vaut la même chose que na.rm = TRUE, il s'agit simplement d'une autre façon de l'écrire.
+
+  **Fonction mean :**
+  Pour trouver la moyenne d'une variable
+  
+```{r}
+mean(Titanic$Age, na.rm = T)
+```
+
+  **Fonction sd :**
+  Pour trouver l'écart type d'une variable
+  
+```{r}
+sd(Titanic$Age, na.rm = T)
+```
+
+  **Fonction median :**
+  Pour trouver la médiane d'une variable
+  
+```{r}
+median(Titanic$Age, na.rm = T)
+```
+
+## Créer des sous-jeux de données
+
+La création d'un nouveau jeu de données à partir d'un jeu de données existant peut être intéressant pour faire une analyse plus approfondie. Par exemple le prix moyen que les hommes ont payé pour venir sur le Titanic.
+
+Il existe plusieurs méthodes pour créer des sous jeux de données, nous allons voir ici la plus simple.
+
+  **Méthode avec filter :**
+  
+```{r}
+TitanicHommes <- Titanic %>% filter(Sex=="male")
+```
+
+Ici, nous avons crée un nouveau jeu de données contenant uniquement les hommes. Nous pouvons donc faire des analyses concernant uniquement cette population.
+
+
+*--> Exercice : Trouver la moyenne d'âge des femmes en première classe présentes sur le Titanic*
+
+```{r}
+TitanicFemmes1st <- Titanic %>% filter(Sex=="female" & Pclass==1)
+mean(TitanicFemmes1st$Age, na.rm = T)
+```
+
+
+## Gestion des NA
+
+La gestion des valeurs manquantes dans un jeu de données est très importante pour pouvoir ensuite faire fonctionner des algorithmes sur nos données. Certains algorithmes fonctionnent même avec des valeurs manquantes (mais risque d'être moins performants), certains imposent d'avoir un jeu de données "propre" c'est à dire avec aucune valeur manquante.
+Ici, nous allons voir dans un premier temps comment trouver le nombre de valeurs manquantes dans le jeu de données.
+
+  **Fonction is.na :**
+
+```{r}
+sum(is.na(Titanic))
+```
+
+La fonction sum placée avant is.na permet de faire la somme de toutes les valeurs manquantes du jeu de données. Si on utilise la fonction is.na sans la fonction sum, nous allons avoir l'ensemble des valeurs qui s'afficheront de la manière suivante : FALSE, TRUE, TRUE, FALSE, FALSE, etc. 
+Ce n'est donc pas pratique pour comptabiliser les valeurs manquantes.
+TRUE indique que la valeur est absente / FALSE que la valeur est présente.
+
+La fonction peut s'appliquer soit sur le jeu de données entier soit sur des colonnes ou des lignes en fonction de nos besoins d'analyse.
+
+
+## Créer des tables de données répondant à des conditions
+
+Pour trouver les valeurs manquantes, il est possible de recourir à une analyse de corrélation entre les variables, toutefois, cela impose de convertir l'ensemble des valeurs au format numérique. 
+Dans certains cas donc, pour "prédire" la valeur manquante, il est possible de passer par la fonction table.
+
+Cette fonction n'est pas utile seulement pour prédire les valeurs manquantes mais aussi pour analyser plus en profondeur les données.
+
+  **Fonction table :**
+  
+```{r}
+table(Titanic$Sex, Titanic$Pclass, Titanic$Embarked)
+```
+
+Dans cet exemple, nous avons crée une table concernant trois variables : Sex, Pclass et Embarked.
+
+Ainsi, imaginons que nous savons qu'un homme a embarqué à "Q" mais nous ne connaissons pas la classe dans laquelle il se trouve. En étudiant la table, il est très probable qu'il soit en troisième classe.
+Attention toutefois, pour prédire les valeurs, la meilleure option reste d'étudier l'intégralité du jeu de données.
+En effet, il est possible que l'homme embarqué à "Q" ait payé un billet très cher et qu'il soit en première classe (attention donc à ne pas tirer de conclusion hâtive).
 
