@@ -231,7 +231,7 @@ TRUE indique que la valeur est absente / FALSE que la valeur est présente.
 La fonction peut s'appliquer soit sur le jeu de données entier soit sur des colonnes ou des lignes en fonction de nos besoins d'analyse.
 
 
-## Créer des tables de données répondant à des conditions
+## Créer des tables de données spécifiques
 
 Pour trouver les valeurs manquantes, il est possible de recourir à une analyse de corrélation entre les variables, toutefois, cela impose de convertir l'ensemble des valeurs au format numérique. 
 Dans certains cas donc, pour "prédire" la valeur manquante, il est possible de passer par la fonction table.
@@ -250,3 +250,36 @@ Ainsi, imaginons que nous savons qu'un homme a embarqué à "Q" mais nous ne con
 Attention toutefois, pour prédire les valeurs, la meilleure option reste d'étudier l'intégralité du jeu de données.
 En effet, il est possible que l'homme embarqué à "Q" ait payé un billet très cher et qu'il soit en première classe (attention donc à ne pas tirer de conclusion hâtive).
 
+
+## Changer le type d'une variable
+
+  **Fonction as.formatvoulue :**
+  
+```{r}
+Titanic$Survived <- as.logical(Titanic$Survived)
+```
+
+Ici, nous avons indiqué que nous souhaitions transformée la variable Survived initialement en numérique en variable de type logique. En effet, cette variable indique si oui ou non une personne a survécu, il s'agit donc d'un argument logique et non numérique.
+
+Nous recommençons avec d'autres variables de ce jeu de données qui ne se trouvent pas dans leur bon format.
+
+```{r}
+Titanic$PassengerId <- as.character(Titanic$PassengerId)
+Titanic$Pclass <- as.factor(Titanic$Pclass)
+Titanic$Sex <- as.factor(Titanic$Sex)
+```
+
+Là encore, la variable PassengerId est au format numérique mais elle n'a pas valeur à être utilisée dans des calculs (cela n'aurait aucun sens), nous la transformons donc en valeur texte.
+Pour les variables Pclass et Sex, il s'agit de variables de type facteur, en effet, le sexe et la classe ont une influence sur la probabilité de survie. Nous pouvons donc les passer au format "factor".
+
+## Renommer une colonne 
+
+Il existe plusieur méthodes pour changer le nom d'une colonne, nous verrons les plus utilisées et les plus simples.
+
+  **Première méthode :**
+  
+```{r}
+base::colnames(Titanic)[colnames(Titanic)=="Survived"] <- "Survivant"
+```
+
+On entre d'abord le nom initial de la colonne puis on définit le nouveau nom souhaité.
