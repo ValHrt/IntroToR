@@ -283,3 +283,53 @@ base::colnames(Titanic)[colnames(Titanic)=="Survived"] <- "Survivant"
 ```
 
 On entre d'abord le nom initial de la colonne puis on définit le nouveau nom souhaité.
+
+  **Deuxième méthode (avec dplyr) :**
+  
+```{r}
+Titanic <- rename(Titanic, "Classe" = "Pclass")
+```
+
+Ici, on entre le nouveau nom puis l'ancien. Cette méthode est plus rapide que la précédente, notamment si on souhaite modifier plusieurs noms de colonne d'un seul coup. Il suffit alors de continuer le code "Classe" = "Pclass", "Survivant" = "Survived", etc.
+
+
+## Changer une valeur en particulier dans une colonne 
+
+Ici, le but est de changer la valeur d'une donnée présente dans notre jeu de données. Cela peut être utile lorsque nous devons modifier / renseigner une donnée qui a été mal indiquée dans notre jeu de données.
+Pour l'exemple, nous allons modifier une valeur aléatoirement, ce qu'il ne faut pas faire dans la réalité pour éviter de fausser l'analyse !
+
+```{r}
+Titanic$Cabin[78] <- "Test"
+```
+
+Nous avons indiqué que pour la 78ème valeur de la colonne Cabin, la valeur était "Test". Pour vérifier que ce changement a été pris en compte, il suffit d'écrire le code suivant.
+
+```{r}
+Titanic$Cabin[78]
+```
+
+Nous voyons alors que la valeur a bien été modifée. Attention encore une fois, cette valeur a été modifié uniquement pour l'exemple. Dans la réalité, il ne faut pas modifier les valeurs sans avoir définit une méthode pour prédire la valeur manquante !
+
+
+## Changer toutes les valeurs d'une colonne (dplyr)
+
+Il peut être intéressant de modifier l'ensemble des valeurs d'une colonne pour y voir plus clair dans nos données. Voici la méthode la plus simple pour réaliser cette action.
+
+```{r}
+Titanic$Classe <- recode(Titanic$Classe, "1"="Premiere", "2"="Seconde", "3"="Troisieme")
+```
+
+Ici, nous avons changé les valeurs en indiquant d'abord l'ancienne valeur puis la nouvelle. Attention toutefois, en travaillant sur des jeux de données très large, il est déconseillé de transformer les valeurs comme dans l'exemple ci dessus. En effet, en faisant cela, vous augmentez considérablement le poids du jeu de données (ex: 1 million de "3" prend moins de place que un million de "trois").
+
+
+  **Exercices à réaliser suite au premier tutoriel**
+
+- Modifiez le nom de colonne cabin par Cabine en utilisant dplyr.
+  
+- Trouver la ligne pour laquelle le passager est féminin, en troisieme classe, âgée de 24 ans et dans la cabine G6
+
+- Même manipulation mais cette fois sans tenir compte de l'âge. Que pouvez vous en conclure en lisant les 4 lignes de données ?
+
+- Trouver le nombre de valeurs manquantes sur la colonne Cabine
+
+- Créer un sous-jeu de données concernant uniquement les personnes âgées de moins de 16 ans
