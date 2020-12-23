@@ -45,7 +45,7 @@ Cliquer sur le fichier, puis import dataset, puis recopier le chemin du fichier
   Permet de voir le jeu de données dans son intégralité dans un nouvel onglet
 
 ```{r}
-View(Titanic)
+#View(Titanic)
 ```
 
 Tips : Il est préférable d'entre ce code directement dans la console pour éviter de lire ce code à chaque fois que le document est knitté.
@@ -333,3 +333,7 @@ Ici, nous avons changé les valeurs en indiquant d'abord l'ancienne valeur puis 
 - Trouver le nombre de valeurs manquantes sur la colonne Cabine
 
 - Créer un sous-jeu de données concernant uniquement les personnes âgées de moins de 16 ans
+
+- Trouver le prix moyen d'un billet sur le Titanic
+
+- Trouver l'âge médian des femmes sur le Titanic
