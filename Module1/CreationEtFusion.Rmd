@@ -1,0 +1,153 @@
+---
+title: "Fusion des jeux de données"
+author: "Valentin Henriot"
+date: "12/23/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Créer un jeu de données sous R
+<div style="text-align: justify">
+Dans le tutoriel précédent, nous avons vu comment importer un jeu de données existant. Ici, nous allons apprendre à créer le jeu de données directement via R.
+
+  **Méthode pour créer un dataframe :**
+  
+  *1 : Créer les variables*
+  
+```{r}
+Identifiant <- c(1, 2, 3, 4, 5, 6)
+Sexe <- c("Homme", "Femme", "Femme", "Femme", "Homme", "Homme")
+Fumeur <- c(T, F, T, T, F, F) # T pour True, F pour False
+```
+
+Nous avons créée trois variables : Identifiant, Sexe et Fumeur. Il faut maintenant fusionner ces 3 variables pour les transformer en dataframe (jeu de données).  
+L'argument "c" veut dire "combine", en indiquant "c", nous précisons à R que nous allons ajouter plusieurs valeurs. Si nous oublions de préciser "c" et que nous entrons plusieurs valeurs, la console va nous afficher une erreur.
+
+  *2 : Créer le dataframe*
+
+```{r}
+EtudeTabac <- data.frame(Identifiant, Sexe, Fumeur)
+```
+
+Nous avons créée notre dataframe en renseignant les variables dans la fonction data.frame. Nous vérifions maintenant à quoi ressemble ce dernier.
+
+```{r}
+EtudeTabac
+```
+
+## Rajouter une colonne dans le dataframe :
+
+Pour rajouter une colonne à un jeu de données il existe plusieurs méthodes, toutefois, la suivante est la plus simple et la plus rapide.
+
+```{r}
+EtudeTabac$Cancer <- c(T, F, T, F, F, T)
+```
+
+Nous avons ajouté une nouvelle colonne "Cancer" à notre jeu de données comprenant des valeurs de type logique.
+
+
+# Fusion de plusieurs jeu de données :
+
+Maintenant, nous allons créer un nouveau jeu de données que nous allons tenté de "fusionner" avec notre dataframe EtudeTabac. 
+Il est très important de maitriser la fusion des jeux de données cela permet de relier des jeux de données entre eux et ainsi de faire des analyses plus poussées.
+
+Premièrement, nous allons créer un nouveau jeu de données avec une autre méthode que celle vue précédemment.
+
+  **Création d'un dataframe, autre méthode :**
+  
+```{r}
+AgeEtPoids <- data.frame(Id = c(1, 2, 3, 4, 5, 6), Age = c(70, 50, 65, 25, 22, 55), Poids = c(75, 60, 45, 54, 80, 100))
+```
+
+Nous avons crée notre nouveau jeu de données qui contient uniquement des valeurs numériques. Nous allons maintenant tenter de le fusionner avec EtudeTabac.
+
+Tout d'abord, pour fusionner un jeu de données, il est nécessaire d'avoir des valeurs en commun.
+Nous remarquons dans notre cas que les colonnes Identifiant et Id contiennent les mêmes valeurs, nous allons donc pouvoir faire la fusion à partir de ces valeurs.
+
+NB : Attention, la fusion des jeux de données doit avoir un sens pour pouvoir faire une analyse. Ici, on suppose que les identifiants correspondent à une personne unique dans le cadre de la même étude, les dataframes sont simplement en deux parties (cela arrive souvent sur les jeux de données en entreprise).
+Toutefois, si les identifiants correspondaient dans le premier cas à une personne et pour le second à un animal, il n'y aurait alors aucun intérêt à fusionner les jeux de données car les identifiants ne désignent pas le même "objet".
+
+Tout d'abord, il est nécessaire que les colonnes Identifiant et Id portent le même nom pour pouvoir ensuite fusionner les dataframes. Nous allons donc changer la valeur Identifiant en Id pour EtudeTabac.
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+EtudeTabac <- rename(EtudeTabac, "Id" = "Identifiant")
+```
+
+## Fonction left_join :
+
+```{r warning=FALSE}
+EtudeTabac2 <- left_join(EtudeTabac, AgeEtPoids, by = "Id")
+```
+
+Nous avons maintenant un seul dataframe contenant l'ensemble des informations des deux df précédents, pour cela nous avons indiqué que la fusion devait avoir lieu en prenant en compte les valeurs des colonnes Id des deux df.
+
+```{r}
+EtudeTabac2
+```
+
+Il faut noter que la fonction leftjoin aurait très bien pu fonctionner même si les valeurs des identifiants n'étaient pas dans le même ordre (par exemple : 1, 2, 3, 4, 5, 6 pour EtudeTabac et 2, 3, 5, 1, 4, 6 pour AgeEtPoids. En effet, la fonction leftjoin va se baser sur la valeur des identifiants pour pouvoir effectuer la fusion, l'ordre n'a pas d'importance et le résultat sera le même).
+
+La fonction left_join exige également que les dataframes soient de la même longueur. (Si notre premier jeu de données contenait 6 lignes et le second 8, la fusion n'aurait pas fonctionné)
+
+Nous allons voir maintenant une autre fonction pour fusionner les jeux de données.
+
+## Fonction bind_cols :
+
+Nous créons un nouveau df :
+
+```{r}
+Identite <- data.frame(Prénom = c("Yves", "Mathilde", "Elisa", "Lea", "Pierre", "Jacques"), Pays = c("France", "Canada", "Belgique", "Monaco", "Angleterre", "Bresil"))
+```
+
+Ici, nous n'avons pas d'identifiants et il est donc impossible d'utiliser left_join comme dans l'exemple précédent.
+
+Nous allons donc utiliser la fonction bind_cols. Attention, cette fonction est "dangereuse", en effet, il faut absolument que l'ordre des deux df soient exactement le même, sinon les informations vont êtres mélangées puisque qu'il s'agit ici plus d'un "collage" de df que d'une fusion (en effet, pas de colonnes avec des valeurs en commun).
+
+Pour notre exemple, le df Identite est dans l'ordre, toutefois, si nous avions indiqué Mathilde puis ensuite Yves, nous aurions eu un homme qui s'appelle Mathilde et une femme qui s'appelle Yves.
+
+```{r}
+bind_cols(EtudeTabac2, Identite)
+```
+
+Dans l'exemple ci-dessus, vous pouvez remarquer que nous n'avons pas créée de dataframe (absence de <-), nous affichons simplement le résultat de la fusion.  
+Cela nous permettra de ne pas avoir un jeu de données "trop surchargé" pour l'exemple suivant.
+
+Il existe la même fonction pour rajouter des lignes supplémentaires au df au lieu des colonnes.
+
+
+## Fonction bind_rows :
+
+Nous créons un nouveau df :
+
+```{r}
+EtudeTabac3 <- data.frame(Id = c(7, 8), Sexe = c("Femme", "Homme"), Fumeur = c(T, F), Cancer = c(F, T), Age = c(18, 85), Poids = c(58, 70))
+```
+
+Il est nécessaire que les colonnes apparaissent dans le bon ordre (comme dans EtudeTabac2) et que les noms de colonnes correspondent (si ce n'est pas le cas, il sera impossible d'accoler les deux df).
+
+```{r}
+bind_rows(EtudeTabac2, EtudeTabac3)
+```
+
+Nous ne créons pas de nouveau df, nous regardonc uniquement le résultat de la fonction.
+
+Il est possible de garder une trace de l'accolement des df si on souhaite voir le jeu de données initial et le jeu de données "ajouté".
+
+```{r}
+bind_rows(EtudeTabac2, EtudeTabac3, .id="Trace")
+```
+
+Là, nous remarquons via la colonne "Trace", le premier jeu de données puis le second, représenté par les chiffres 1 et 2.
+
+Il existe de nombreuses autres méthodes de jointures de tables qui s'utilisent dans des cas bien précis. Ici, nous avons vu les principales. Toutefois, si vous souhaitez vous familiariser avec tous les types de jointures, vous pouvez vous rendre **[ici](http://perso.ens-lyon.fr/lise.vaudor/combinaisons-et-jointures-de-tables-avec-dplyr/)**, tout y est très bien expliqué.
+
+
+# Exercices 
+
+- Créer un nouveau jeu de données contenant deux colonnes ("Id", avec des valeurs numériques et "Alcool", avec des arguments de type logique). Faire ensuite une fusion avec le df EtudeTabac2 en créant un nouveau df appelé EtudeFinale.
+
+- Ensuite, créer une seule colonne avec le type d'alcool consommé pour ceux ayant "True" sur la colonne "Alcool". Utiliser les deux méthodes vues dans ce tuto pour accoler cette colonne au df EtudeFinale (sans générer de nouveau df pour la méthode bind_cols). </div>
