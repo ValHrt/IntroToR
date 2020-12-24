@@ -1,0 +1,104 @@
+---
+title: "Graphiques avec ggplot2"
+author: "Valentin Henriot"
+date: "12/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Les graphiques sous R
+
+Lorsqu'on réalise une étude sur les données, il est très utile d'utiliser la représentation graphique pour que les données soient "plus parlantes". Nous allons donc voir dans ce tutoriel les différentes méthodes pour réaliser des graphiques via R.
+
+## Les graphiques de base
+
+R permet de faire des graphiques assez rapidement et facilement sans l'utilisation d'une librairie. Nous allons donc voir dans un premier temps les graphiques proposés "nativement" par R.
+
+R propose librement des jeux de données, pour savoir quels sont les jeux de données proposés par R, il suffit d'entrer la commande suivante dans la console : data()
+
+Ici, nous utiliserons le jeu de données mtcars.
+
+```{r}
+mtcars
+```
+
+
+## Graphique à une variable avec le package graphics
+
+Nous allons maintenant réaliser un histogramme concernant la puissance des véhicules du df.
+
+```{r}
+hist(mtcars$hp)
+```
+
+Ici, nous pouvons voir la fréquence liée aux puissances en chevaux des véhicules du df. Concrétement, nous voyons que le df contient 19 véhicules dont la puissance est comprise entre 50 et 150 chevaux, 11 entre 150 et 250 et seulement 2 entre 250 et 350.  
+Ce type de graphique permet d'avoir une vue globale de nos données sur une variable en particulier.
+
+```{r}
+boxplot(mtcars$hp)
+```
+
+Une autre façon de représenter la fréquence des valeurs d'une variable appelée boxplot (boite à moustaches en français). Ici, nous voyons que la majorité des valeurs sont comprises entre 100 et 180 chevaux (environ). La médiane est matérialisée par le trait noir. La "boite" contient 50% des valeurs de notre df. Les traits en pointillés matérialisent le 1er et le 3eme quartile. Le petit rond indique une valeur "extrème".
+
+
+## Graphique à plusieurs variables avec le package graphics
+
+Précédemment, nous avons vu des graphiques ayant pour but de mesure la fréquence des valeurs pour une variable. Maintenant, nous allons voir comment générer des graphiques prenant en compte deux variables pour faire des analyses plus "poussées".
+
+```{r}
+plot(x = mtcars$hp, y = mtcars$qsec, main = "Comparaison qsec et hp")
+```
+
+Ici, nous pouvons comparer le temps pour parcourir un quart de miles par rapport au nombre de chevaux du véhicule. La tendance qui semble se dégager du graphique est que plus un véhicule est puissant, moins le temps pour parcourir un quart de miles sera élevé.  
+L'argument main permet de mettre un titre au graphique.
+NB : pour comprendre les variables du jeu de données, il suffit de marquer le code suivant dans la console : ?mtcars
+
+```{r}
+plot(mtcars[, 1:3])
+```
+
+Il est également possible de spécifier plusieurs variables pour générer un graphique, permettant d'avoir une analyse plus globale. Ici, sans rentrer dans les détails, nous pouvons voir que quand le nombre de cylindres augmente les valeurs de mpg descendent (ce qui veut dire que la voiture fait moins de miles avec un galon, le galon représentant environ 4,55 litres d'essence).  
+À l'inverse, quand le nombre de cylindres augmente, les valeurs de la variable disp augmentent (disp représentant la pression des pistons).
+
+Maintenant, nous allons voir comment personnaliser les graphiques. Pour ce premier exemple, nous souhaitons avoir le nom des véhicules qui apparait sur l'axe Y et la puissance sur l'axe X.
+
+Toutefois, nous remarquons que notre df ne contient pas de nom de colonne pour les noms de véhicule, en effet, il ne s'agit pas d'une colonne à proprement parler mais il s'agit du nom des lignes. 
+
+```{r}
+mtcars$name <- rownames(mtcars)
+```
+
+Ici, nous indiquons à R de créer une colonne appelée name contenant le nom des véhicules.
+
+```{r}
+barplot(mtcars$hp, names.arg=mtcars$name, horiz=TRUE, las=1, cex.names=0.5)
+```
+
+Nous avons ici un graphique indiquant le nombre de chevaux pour chaque véhicule. Toutefois, le graphique n'affiche pas les données de manière croissante ou décroissante. Nous verrons plus tard comment régler ce problème simplement via ggplot2.
+
+Les arguments utilisés dans le code sont les suivants :
+- mtcars$hp indique la variable que nous souhaitons définir pour l'axe X.
+- names.arg indique les noms que nous souhaitons faire apparaitre pour l'axe Y.
+- horiz=TRUE indique de mettre les "barres" à l'horizontale
+- las=1 indique que les noms de l'axe Y doivent être à l'horizontale
+- cex.names indique la taille de police des noms de l'axe Y
+
+Nous allons voir une dernière fonctionnalité du package graphics (bien qu'il en existe encore des centaines mais il est impossible de toutes les couvrir au travers d'un seul tuto).
+
+```{r}
+par(mfrow=c(2,2), mar=c(2,5,2,1), las=1)
+plot(x = mtcars$hp, y = mtcars$qsec, main = "Titre 1")
+boxplot(mtcars$hp, main = "Titre 2")
+plot(x = mtcars$wt, y = mtcars$mpg, main = "Titre 3")
+boxplot(mtcars[,1:3], main = "Titre 4")
+```
+
+La fonction par permet de définir les paramètres qui seront appliqués sur tous les graphiques.
+- mfrow indique les dimensions (2 par 2 donc 4 graphiques)
+- mar pour définir les marges entre les graphiques
+- las=1 pour indiquer que les valeurs sur l'axe des Y doivent être à l'horizontale
+
+Ainsi, en procédant avec la fonction "par", on gagne du temps car on définit une seule fois les paramètres et il est inutile de les repréciser dans les codes qui suivent.
