@@ -102,3 +102,47 @@ La fonction par permet de définir les paramètres qui seront appliqués sur tou
 - las=1 pour indiquer que les valeurs sur l'axe des Y doivent être à l'horizontale
 
 Ainsi, en procédant avec la fonction "par", on gagne du temps car on définit une seule fois les paramètres et il est inutile de les repréciser dans les codes qui suivent.
+
+
+# Graphiques avec ggplot2
+
+La librairie ggplot2 permet de faire des graphiques plus détaillés et ce, de manière plus simple. Nous allons donc consacrer cette seconde partie à ggplot2.
+
+NB : il est conseillé d'installer l'addins ESQUISSE pour gagner du temps sur la création de graphique via ggplot2.
+
+
+## Graphiques basiques
+
+Nous allons voir comment créer les mêmes graphiques qu'à l'aide du package graphics sur la partie précédente.
+Ici, nous utiliserons la fonction qplot (pour quick plot) du package ggplot2.
+
+```{r}
+library(ggplot2)
+qplot(hp, qsec, data = mtcars)
+```
+
+Nous avons un graphique qui ressemble à celui du package graphics. Néanmoins, ggplot2 permet plus de modifications que le package graphics. Nous allons donc voir quelques une de ses spécificités.
+
+```{r}
+qplot(hp, qsec, data = mtcars, colour = mpg)
+```
+
+Ici, nous indiquons via l'argument "colour", la variable que nous choisissons pour définir la couleur. Dans notre cas, nous voyons que plus une voiture est puissante et rapide, plus elle consomme.  
+Indiquer une couleur permet de faire une analyse plus approfondie et plus "parlante".
+
+Nous aurions également pu spécifier une taille des points à la place des couleurs, pour faire cela, nous utilisons le code suivant.
+
+```{r}
+qplot(hp, qsec, data = mtcars, size = mpg)
+```
+
+Nous avons donc une taille des points qui varie en fonction de la valeur de la variable "mpg". Nous aurions pu également rajouter l'argument couleur soit sur une autre variable, soit sur la variable "mpg".
+
+Si nous souhaitons réaliser une analyse comportant plusieurs graphiques, nous pouvons utiliser le code suivant.
+
+```{r}
+qplot(mpg, wt, data = mtcars, facets = vs ~ cyl, size = carb)
+```
+
+Ici, nous basons notre analyse sur les variables mpg et wt. Nous indiquons à R via l'argument "facets", les deux autres variables que nous souhaitons utiliser pour l'analyse, ici "vs" et "cyl".  
+La variable cyl est en haut, la variable vs est sur la droite. Enfin, nous avons également spécifié que la taille des points devait prendre en compte les valeurs de la variable carb.
