@@ -116,7 +116,7 @@ NB : il est conseillé d'installer l'addins ESQUISSE pour gagner du temps sur la
 Nous allons voir comment créer les mêmes graphiques qu'à l'aide du package graphics sur la partie précédente.
 Ici, nous utiliserons la fonction qplot (pour quick plot) du package ggplot2.
 
-```{r}
+```{r message=FALSE}
 library(ggplot2)
 qplot(hp, qsec, data = mtcars)
 ```
@@ -146,3 +146,67 @@ qplot(mpg, wt, data = mtcars, facets = vs ~ cyl, size = carb)
 
 Ici, nous basons notre analyse sur les variables mpg et wt. Nous indiquons à R via l'argument "facets", les deux autres variables que nous souhaitons utiliser pour l'analyse, ici "vs" et "cyl".  
 La variable cyl est en haut, la variable vs est sur la droite. Enfin, nous avons également spécifié que la taille des points devait prendre en compte les valeurs de la variable carb.
+
+Nous allons maintenant réaliser un nouveau type de graphique.  
+Pour faire cela, nous allons utiliser un nouveau jeu de données.
+
+```{r}
+Orange
+```
+
+Nous avons ici un jeu de données concernant la circonférence des arbres au fil des années. La colonne Tree indique le "numéro" de l'arbre, la colonne "age" indique l'âge de l'arbre, la colonne "circumference" indique la circonférence de l'arbre.
+
+Nous allons tenter de réaliser un graphique en courbe sur l'arbre numéro 1 pour voir son évolution au fil des années.
+
+```{r}
+ggplot(Orange, aes(x = age, y = circumference)) + 
+  geom_line()
+```
+
+Ici, nous remarquons que nous avons un problème car le graphique prend en compte l'ensemble des arbres alors que nous voulions nous focaliser sur l'arbre numéro 1. Alors, comment procéder pour avoir uniquement l'arbre n°1 ?
+
+Il existe plusieurs méthodes pour se focaliser uniquement sur une valeur d'une variable, ici nous en verrons deux (dont une déjà vue précédemment).
+
+```{r message=FALSE}
+library(dplyr)
+Orange %>% filter(Tree=="1") %>% ggplot(aes(x = age, y = circumference)) + 
+  geom_line()
+```
+
+Comme vu dans les précédentes leçons, nous utilisons la fonction filter pour nous focaliser sur la valeur 1 de la variable "Tree".  
+Pour expliquer le code ci-dessus : nous appelons le jeu de données, nous le filtrons sur la valeur voulue, ensuite nous utilisons ggplot, en n'oubliant pas de retirer "Orange" du code ggplot car sinon nous allons réappeler le jeu de données dans son intégralité alors que nous venons de le filtrer.
+
+Comment faire si nous souhaitons réaliser ce graphique sans utiliser la fonction filter ?  
+
+```{r}
+ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference)) + 
+  geom_line()
+```
+
+Ici, nous avons réalisé le même graphique mais sans passer par l'appel de la fonction filter. Nous avons indiqué via la fonction subset que nous souhaitions nous focaliser sur le dataframe Orange, puis sur la valeur 1 pour la variable Tree.
+
+Comment faire si nous souhaitons voir l'ensemble des valeurs sur le graphique avec une ligne pour chaque valeur ?
+
+```{r}
+ggplot(Orange, aes(x = age, y = circumference)) + 
+  geom_line(aes(colour = Tree))
+```
+
+Ici, nous précisons dans l'argument geom_line que nous souhaitons que chaque courbe représente un arbre et nous spécifions que la couleur doit être en fonction de la valeur de la variable Tree.
+
+Il est également possible de faire apparaitre un graphique pour chaque arbre.
+
+```{r}
+ggplot(Orange) +
+ aes(x = age, y = circumference) +
+ geom_line(aes(colour = Tree)) +
+ facet_wrap(vars(Tree))
+```
+
+Nous avons ajouté l'argument facet_wrap qui permet de créer un graphique pour chaque valeur de la variable Tree.
+
+
+## Personnalisation de graphiques
+
+Nous allons maintenant voir comment personnaliser un graphique (ajouter un titre, changer le thème, modifier les couleurs, modifier la légende, ajouter une source, etc).
+
