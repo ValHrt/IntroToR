@@ -210,3 +210,27 @@ Nous avons ajouté l'argument facet_wrap qui permet de créer un graphique pour 
 
 Nous allons maintenant voir comment personnaliser un graphique (ajouter un titre, changer le thème, modifier les couleurs, modifier la légende, ajouter une source, etc).
 
+```{r}
+ggplot(Orange, aes(x = age, y = circumference)) + 
+  geom_line(aes(colour = Tree)) +
+  labs(y = "Circonférence", x = "Âge", title = "Évolution de la circonférence des arbres", caption = "Source: Jeu de données R") +
+ ggthemes::theme_stata() # installer le package ggthemes au préalable
+```
+
+Nous avons repris le même code que précédemment. Cette fois, nous avons ajouté l'argument "labs" qui permet de modifier certaines options du graphique.  
+- y et x représentent les noms que nous souhaitons donner aux axes
+- title représente le titre à donner au graphique
+- caption représente une annotation qui permet de citer la source des données ou l'auteur, etc
+- ggthemes::theme_stata() permet de changer le thème, ici nous avons choisi "theme_stata" mais il en existe de nombreux autres.
+
+Maintenant, tentons de modifier la couleur du graphique.
+
+```{r}
+ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference, colour = "RED")) + 
+  geom_line()
+```
+
+Ici, nous avons indiqué à R que nous souhaitions que la couleur du graphique soit rouge. Toutefois, nous remarquons ici que la légende n'a pas de sens puisque nous avons uniquement une variable sur laquelle nous nous focalisons.
+
+
+## Créer un thème unique à dupliquer sur tous les graphiques
