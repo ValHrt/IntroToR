@@ -188,18 +188,21 @@ Ici, nous avons réalisé le même graphique mais sans passer par l'appel de la 
 Comment faire si nous souhaitons voir l'ensemble des valeurs sur le graphique avec une ligne pour chaque valeur ?
 
 ```{r}
-ggplot(Orange, aes(x = age, y = circumference)) + 
-  geom_line(aes(colour = Tree))
+ggplot(Orange, aes(x = age, y = circumference, group = Tree, color = Tree)) + 
+  geom_line()
 ```
 
-Ici, nous précisons dans l'argument geom_line que nous souhaitons que chaque courbe représente un arbre et nous spécifions que la couleur doit être en fonction de la valeur de la variable Tree.
+Ici, nous précisons via "group" que nous souhaitons une ligne par "Tree" et que la couleur "colour" doit être différente entre les "Tree".  
+NB : nous remarquons que la légende n'est pas dans l'ordre, cela est du au fait que la variable Tree n'est pas au format numérique. Ici donc, R ne peut pas classer ces valeurs par ordre ascendant ou descendant.
+
+**Exercice :** Réaliser la manipulation pour mettre la variable "Tree" au format numérique (la réponse est très facilement trouvable sur internet et vous serez souvent amené à aller sur StackOverFlow ou d'autres sites pour trouver la réponse à vos questions, c'est donc l'occasion d'effectuer votre première recherche).
 
 Il est également possible de faire apparaitre un graphique pour chaque arbre.
 
 ```{r}
 ggplot(Orange) +
- aes(x = age, y = circumference) +
- geom_line(aes(colour = Tree)) +
+ aes(x = age, y = circumference, color = Tree) +
+ geom_line() +
  facet_wrap(vars(Tree))
 ```
 
@@ -212,7 +215,7 @@ Nous allons maintenant voir comment personnaliser un graphique (ajouter un titre
 
 ```{r}
 ggplot(Orange, aes(x = age, y = circumference)) + 
-  geom_line(aes(colour = Tree)) +
+  geom_line(aes(color = Tree)) +
   labs(y = "Circonférence", x = "Âge", title = "Évolution de la circonférence des arbres", caption = "Source: Jeu de données R") +
  ggthemes::theme_stata() # installer le package ggthemes au préalable
 ```
@@ -226,11 +229,33 @@ Nous avons repris le même code que précédemment. Cette fois, nous avons ajout
 Maintenant, tentons de modifier la couleur du graphique.
 
 ```{r}
-ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference, colour = "RED")) + 
+ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference, color = "RED")) + 
   geom_line()
 ```
 
 Ici, nous avons indiqué à R que nous souhaitions que la couleur du graphique soit rouge. Toutefois, nous remarquons ici que la légende n'a pas de sens puisque nous avons uniquement une variable sur laquelle nous nous focalisons.
 
+Pour supprimer la légende, il suffit d'entrer le code suivant :
+
+```{r}
+ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference, color = "RED")) + 
+  geom_line() +
+  guides(color = FALSE)
+```
+
+Grâce à l'argument "guides", nous avons indiqué que nous ne souhaitions pas de légende pour l'argument "colour". Si la légende avait été basée sur un autre argument que "colour" et que nous souhaitions la supprimer, nous aurions alors rentré : guides(autreargument = FALSE).
+
+Il est également possible de modifier le titre de la légende et son contenu par une manipulation un peu plus complexe.
+
+```{r}
+ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference, color = Tree)) + 
+  geom_line() + 
+  labs(color = "Nouvelle légende") +
+  scale_color_manual(labels = "Arbre 1", values = "Red")
+```
+
+Pour pouvoir réaliser un changement de titre de la légende, nous avons utilisé l'argument labs et nous avons spécifié que le titre de la légende devait être "Nouvelle légende". Ensuite, nous avons indiqué via l'argument scale_color_manual, que le label de la légende devait être "Arbre 1" et que la couleur devait être rouge via "values".
+NB : parfois R est peu intuitif comme c'est le cas ici, nous spécifions la couleur rouge non pas au travers de l'argument color mais de l'argument "values".
 
 ## Créer un thème unique à dupliquer sur tous les graphiques
+À voir si peertinent
