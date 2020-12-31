@@ -321,7 +321,14 @@ ggplot(mtcars, aes(x = factor(carb), fill = carb)) +
 
 Nous voyons que les couleurs attribuées ici sont dépendantes de la valeur. Plus la valeur est élevée, plus la teinte est claire.
 
-Voir pour fill = count sur internet
+Admettons que nous souhaitions maintenant classer les différentes valeurs par ordre croissant d'occurences dans le df sur le graphique.
+
+**Classer par occurence :**
+
+```{r}
+
+```
+
 
 ## Créer un thème unique à dupliquer sur tous les graphiques
 À voir si peertinent
