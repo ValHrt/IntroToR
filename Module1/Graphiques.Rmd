@@ -113,8 +113,13 @@ NB : il est conseillé d'installer l'addins ESQUISSE pour gagner du temps sur la
 
 ## Graphiques basiques
 
+
+### Fonction qplot
+
 Nous allons voir comment créer les mêmes graphiques qu'à l'aide du package graphics sur la partie précédente.
 Ici, nous utiliserons la fonction qplot (pour quick plot) du package ggplot2.
+
+**Fonction qplot pour faire un nuage de points :**
 
 ```{r message=FALSE}
 library(ggplot2)
@@ -122,6 +127,8 @@ qplot(hp, qsec, data = mtcars)
 ```
 
 Nous avons un graphique qui ressemble à celui du package graphics. Néanmoins, ggplot2 permet plus de modifications que le package graphics. Nous allons donc voir quelques une de ses spécificités.
+
+**Ajouter de la couleur en fonction d'une variable :**
 
 ```{r}
 qplot(hp, qsec, data = mtcars, colour = mpg)
@@ -132,6 +139,8 @@ Indiquer une couleur permet de faire une analyse plus approfondie et plus "parla
 
 Nous aurions également pu spécifier une taille des points à la place des couleurs, pour faire cela, nous utilisons le code suivant.
 
+**Changer la taille des points en fonction d'une variable :**
+
 ```{r}
 qplot(hp, qsec, data = mtcars, size = mpg)
 ```
@@ -139,6 +148,8 @@ qplot(hp, qsec, data = mtcars, size = mpg)
 Nous avons donc une taille des points qui varie en fonction de la valeur de la variable "mpg". Nous aurions pu également rajouter l'argument couleur soit sur une autre variable, soit sur la variable "mpg".
 
 Si nous souhaitons réaliser une analyse comportant plusieurs graphiques, nous pouvons utiliser le code suivant.
+
+**Graphique à plus de deux variables :**
 
 ```{r}
 qplot(mpg, wt, data = mtcars, facets = vs ~ cyl, size = carb)
@@ -158,6 +169,9 @@ Nous avons ici un jeu de données concernant la circonférence des arbres au fil
 
 Nous allons tenter de réaliser un graphique en courbe sur l'arbre numéro 1 pour voir son évolution au fil des années.
 
+
+### Fonction ggplot
+
 ```{r}
 ggplot(Orange, aes(x = age, y = circumference)) + 
   geom_line()
@@ -166,6 +180,8 @@ ggplot(Orange, aes(x = age, y = circumference)) +
 Ici, nous remarquons que nous avons un problème car le graphique prend en compte l'ensemble des arbres alors que nous voulions nous focaliser sur l'arbre numéro 1. Alors, comment procéder pour avoir uniquement l'arbre n°1 ?
 
 Il existe plusieurs méthodes pour se focaliser uniquement sur une valeur d'une variable, ici nous en verrons deux (dont une déjà vue précédemment).
+
+**Première méthode :**
 
 ```{r message=FALSE}
 library(dplyr)
@@ -176,7 +192,9 @@ Orange %>% filter(Tree=="1") %>% ggplot(aes(x = age, y = circumference)) +
 Comme vu dans les précédentes leçons, nous utilisons la fonction filter pour nous focaliser sur la valeur 1 de la variable "Tree".  
 Pour expliquer le code ci-dessus : nous appelons le jeu de données, nous le filtrons sur la valeur voulue, ensuite nous utilisons ggplot, en n'oubliant pas de retirer "Orange" du code ggplot car sinon nous allons réappeler le jeu de données dans son intégralité alors que nous venons de le filtrer.
 
-Comment faire si nous souhaitons réaliser ce graphique sans utiliser la fonction filter ?  
+Comment faire si nous souhaitons réaliser ce graphique sans utiliser la fonction filter ? 
+
+**Deuxième méthode :**
 
 ```{r}
 ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference)) + 
@@ -187,6 +205,8 @@ Ici, nous avons réalisé le même graphique mais sans passer par l'appel de la 
 
 Comment faire si nous souhaitons voir l'ensemble des valeurs sur le graphique avec une ligne pour chaque valeur ?
 
+**Générer une ligne par valeur :**
+
 ```{r}
 ggplot(Orange, aes(x = age, y = circumference, group = Tree, color = Tree)) + 
   geom_line()
@@ -195,9 +215,11 @@ ggplot(Orange, aes(x = age, y = circumference, group = Tree, color = Tree)) +
 Ici, nous précisons via "group" que nous souhaitons une ligne par "Tree" et que la couleur "colour" doit être différente entre les "Tree".  
 NB : nous remarquons que la légende n'est pas dans l'ordre, cela est du au fait que la variable Tree n'est pas au format numérique. Ici donc, R ne peut pas classer ces valeurs par ordre ascendant ou descendant.
 
-**Exercice :** Réaliser la manipulation pour mettre la variable "Tree" au format numérique (la réponse est très facilement trouvable sur internet et vous serez souvent amené à aller sur StackOverFlow ou d'autres sites pour trouver la réponse à vos questions, c'est donc l'occasion d'effectuer votre première recherche).
+*Exercice :* Réaliser la manipulation pour mettre la variable "Tree" au format numérique (la réponse est très facilement trouvable sur internet et vous serez souvent amené à aller sur StackOverFlow ou d'autres sites pour trouver la réponse à vos questions, c'est donc l'occasion d'effectuer votre première recherche).
 
 Il est également possible de faire apparaitre un graphique pour chaque arbre.
+
+**Générer un graphique distinct pour chaque valeur :**
 
 ```{r}
 ggplot(Orange) +
@@ -228,12 +250,16 @@ Nous avons repris le même code que précédemment. Cette fois, nous avons ajout
 
 Maintenant, tentons de modifier la couleur du graphique.
 
+**Modifier la couleur d'une valeur :**
+
 ```{r}
 ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference, color = "RED")) + 
   geom_line()
 ```
 
 Ici, nous avons indiqué à R que nous souhaitions que la couleur du graphique soit rouge. Toutefois, nous remarquons ici que la légende n'a pas de sens puisque nous avons uniquement une variable sur laquelle nous nous focalisons.
+
+**Suppression de la légende :**
 
 Pour supprimer la légende, il suffit d'entrer le code suivant :
 
@@ -247,6 +273,8 @@ Grâce à l'argument "guides", nous avons indiqué que nous ne souhaitions pas d
 
 Il est également possible de modifier le titre de la légende et son contenu par une manipulation un peu plus complexe.
 
+**Modifier la légende :**
+
 ```{r}
 ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference, color = Tree)) + 
   geom_line() + 
@@ -256,6 +284,44 @@ ggplot(subset(Orange, Tree==1), aes(x = age, y = circumference, color = Tree)) +
 
 Pour pouvoir réaliser un changement de titre de la légende, nous avons utilisé l'argument labs et nous avons spécifié que le titre de la légende devait être "Nouvelle légende". Ensuite, nous avons indiqué via l'argument scale_color_manual, que le label de la légende devait être "Arbre 1" et que la couleur devait être rouge via "values".
 NB : parfois R est peu intuitif comme c'est le cas ici, nous spécifions la couleur rouge non pas au travers de l'argument color mais de l'argument "values".
+
+Nous allons maintenant réaliser un graphique en barres à l'aide de ggplot2. Pour cela nous allons utiliser le df mtcars.
+
+**Graphique en barres :**
+
+```{r}
+ggplot(mtcars, aes(x = factor(carb))) +
+  geom_bar()
+```
+
+Ici, nous souhaitons connaitre le nombre de fois où les différentes valeurs de la variable "carb" apparaissent dans le jeu de données.  
+Nous spécifions via l'argument "aes" que la variable "carb" doit être de type facteur. En effet, si nous ne spécifions pas le type de la variable, le graphique sera moins "esthétique".
+
+Le même graphique sans spécifier le type "facteur" de la variable :
+
+```{r}
+ggplot(mtcars, aes(x = carb)) +
+  geom_bar()
+```
+
+Si nous souhaitons ajouter une teinte de couleur en fonction du nombre de fois où la valeur apparait, il suffit d'ajouter : fill = factor(carb).  
+Encore une fois, si factor n'est pas spécifié, R va alors se baser sur une échelle de couleur en fonction de chaque valeur.
+
+```{r}
+ggplot(mtcars, aes(x = factor(carb), fill = factor(carb))) +
+  geom_bar()
+```
+
+*Sans spécifier fill = factor(carb) :*
+
+```{r}
+ggplot(mtcars, aes(x = factor(carb), fill = carb)) +
+  geom_bar()
+```
+
+Nous voyons que les couleurs attribuées ici sont dépendantes de la valeur. Plus la valeur est élevée, plus la teinte est claire.
+
+Voir pour fill = count sur internet
 
 ## Créer un thème unique à dupliquer sur tous les graphiques
 À voir si peertinent
