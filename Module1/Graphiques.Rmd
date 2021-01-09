@@ -326,9 +326,39 @@ Admettons que nous souhaitions maintenant classer les différentes valeurs par o
 **Classer par occurence :**
 
 ```{r}
+mtcars$carb <- as.factor(mtcars$carb)
 
+ggplot(mtcars, aes(x = forcats::fct_infreq(carb), fill = carb)) +
+  geom_bar()
 ```
 
+Nous voyons ici que la manipulation est complexe car nous cherchons à classer par ordre décroissant le nombre de fois où chaque valeur de la variable est comptée (ggplot2 ne permet pas de le faire facilement).  
+Pour contourner le problème, il faut transformer la variable "carb" en facteur (première ligne du code). Ensuite, nous renseignons le même code que précédemment sauf que nous ajoutons "forcats::fct_infreq", forcats est une librairie qui permet de traiter les variables de type facteur. La fonction fct_infreq permet de classer les valeurs par ordre décroissant.  
 
-## Créer un thème unique à dupliquer sur tous les graphiques
-À voir si peertinent
+Nous avons appelé la librairie d'une autre manière, en effet, il est possible d'appeler une librairie pour une seule opération (si on sait que l'on ne s'en resservira pas plus tard dans nos codes). Pour cela, il suffit de mettre le nom de la librairie suivi de :: puis de la fonction que nous voulons appeler. Par exemple, pour lire un fichier csv, nous pourrions utiliser la manipulation suivante :  
+
+readr::read_csv("nomdufichier")
+
+Attention, cette méthode ne fonctionne que si la librairie a déjà été téléchargée au préalable (via install.packages) ! 
+
+
+## Graphique d'une fonction
+
+Nous allons maintenant voir comment comment générer un graphique à partir d'une fonction.  
+Dans un premier temps, nous créons la fonction :
+
+```{r}
+mafonction <- function(x) 
+{x^2-10*x+5}
+
+ggplot(data.frame(x = c(-5, 15)), aes(x = x)) +
+  stat_function(fun = mafonction, geom = "line")
+```
+
+Nous avons donc vu comment créer une fonction à l'aide de R. Pour cela, c'est très simple, il faut attribuer la fonction à un objet, ici "mafonction". Ensuite, nous utilisons "function" pour indiquer à R que nous allons définir une fonction.  
+Nous spécifions x car la fonction contiendra cette lettre. Si dans notre formule nous avions voulu utiliser x et y comme inconnues, nous aurions alors écrit function(x,y).  
+Ensuite, nous indiquons la formule que nous souhaitons définir comme étant une fonction.
+
+Pour la partie graphique, nous indiquons à ggplot2 entre quelles et quelles valeurs nous souhaitons réaliser notre graphique (ici de -5 à 15). Nous indiquons ensuite que la partie graphique doit prendre en compte la variation de x dans l'intervalle [-5;15].  
+stat_function permet ensuite de renseigner la fonction que nous souhaitons utiliser fun = mafonction puis nous lui indiquons que nous souhaitons qu'il s'agisse d'un graphique en "ligne".
+
